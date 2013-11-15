@@ -99,7 +99,7 @@ app.get("/:url/:opts", function(req, res) {
 			banquo.capture(result.settings, function(image_data){
 				var timestamp = new Date().getTime();
         var key_info = config.output_path + config.file_name + timestamp + '.png';
-        var path = "https://s3-us-west-2.amazonaws.com/" + config.bucket + "/" + key_info
+        var path = "https://s3-us-west-2.amazonaws.com/" + config.bucket + "/" + key_info;
 				res.jsonp(200, {image_data: image_data, timestamp: timestamp, key: key_info, path: path });
 				if (config.upload_to_s3){
 					uploadToS3(image_data, key_info);
