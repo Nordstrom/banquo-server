@@ -64,12 +64,11 @@ function assembleSettings(url, opts){
 
 }
 
-function uploadToS3(image_data, timestamp){
+function uploadToS3(image_data, key_info){
 	AWS = require('aws-sdk');
 	AWS.config.loadFromPath(config.credentials);
 	s3 = new AWS.S3();
 
-	var key_info = config.output_path + config.file_name + timestamp + '.png';
 
 	var img_blog = new Buffer(image_data, 'base64')
   var data = {
@@ -85,7 +84,7 @@ function uploadToS3(image_data, timestamp){
     if (resp == null){
     	console.log('Successful upload: ' + key_info);
     }else{
-      console.log('ERROR IN ' + timestamp);
+      console.log('ERROR IN ' + key_info);
     };
   });
 }
@@ -99,9 +98,11 @@ app.get("/:url/:opts", function(req, res) {
 		if (result.status){
 			banquo.capture(result.settings, function(image_data){
 				var timestamp = new Date().getTime();
-				res.jsonp(200, {image_data: image_data, timestamp: timestamp});
+        var key_info = config.output_path + config.file_name + timestamp + '.png';
+        var path = "https://s3-us-west-2.amazonaws.com/" + config.bucket + "/" + key_info
+				res.jsonp(200, {image_data: image_data, timestamp: timestamp, key: key_info, path: path });
 				if (config.upload_to_s3){
-					uploadToS3(image_data, timestamp);
+					uploadToS3(image_data, key_info);
 				}
 			});
 		}else{
