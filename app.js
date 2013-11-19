@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var request = require('request');
 var banquo = require('banquo');
 var config = require('./config.json')
 
@@ -96,7 +97,6 @@ app.get("/:url/:opts", function(req, res) {
 		var result = assembleSettings(req.params.url, req.params.opts);
 
 		if (result.status){
-      console.log(result.settings);
       var name = result.settings.key;
       if(!name) {
         name = new Date().getTime();
