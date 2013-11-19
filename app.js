@@ -104,6 +104,17 @@ app.get("/:url/:opts", function(req, res) {
 
       var key_info = config.output_path + config.file_name + name + '.png';
       var path = "https://s3-us-west-2.amazonaws.com/" + config.bucket + "/" + key_info;
+      // TODO: use request to try to get this image and if it fails - then go get a screenshot.
+      // something like:
+      // request(path, function (error, response, body) {
+      //   if(error) {
+      //     banquo.capture(result.settings, function(image_data){
+      //      ...
+      //   }
+      //   else {
+      //     extract body
+      //   }
+      //
 			banquo.capture(result.settings, function(image_data){
 
 				res.jsonp(200, {image_data: image_data, name: name, key: key_info, path: path });
