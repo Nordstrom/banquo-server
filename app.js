@@ -96,6 +96,7 @@ app.get("/:url/:opts", function(req, res) {
 		var result = assembleSettings(req.params.url, req.params.opts);
 
 		if (result.status){
+      console.log(result.settings);
       var name = result.settings.key;
       if(!name) {
         name = new Date().getTime();
