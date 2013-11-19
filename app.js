@@ -21,7 +21,7 @@ var error_msgs =  {
 	"domain": "You are attempting to access this server from an unauthorized domain. To install this service on your own server, see it on Github: http://github.com/ajam/banquo-server"
 }
 
-var opts_whitelist = ["mode", "url", "viewport_width", "delay", "selector", "css_hide", "css_file", "out_file"];
+var opts_whitelist = ["mode", "url", "viewport_width", "delay", "selector", "css_hide", "css_file", "out_file", "key"];
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -96,11 +96,16 @@ app.get("/:url/:opts", function(req, res) {
 		var result = assembleSettings(req.params.url, req.params.opts);
 
 		if (result.status){
+      var name = result.settings.key;
+      if(!name) {
+        name = new Date().getTime();
+      }
+
+      var key_info = config.output_path + config.file_name + name + '.png';
+      var path = "https://s3-us-west-2.amazonaws.com/" + config.bucket + "/" + key_info;
 			banquo.capture(result.settings, function(image_data){
-				var timestamp = new Date().getTime();
-        var key_info = config.output_path + config.file_name + timestamp + '.png';
-        var path = "https://s3-us-west-2.amazonaws.com/" + config.bucket + "/" + key_info;
-				res.jsonp(200, {image_data: image_data, timestamp: timestamp, key: key_info, path: path });
+
+				res.jsonp(200, {image_data: image_data, name: name, key: key_info, path: path });
 				if (config.upload_to_s3){
 					uploadToS3(image_data, key_info);
 				}
