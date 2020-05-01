@@ -3,7 +3,9 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "express": "3.4.3",
@@ -12,6 +14,8 @@
     "underscore": "~1.5.2",
     "banquo": ">=0.1.4",
     "aws-sdk": ">=1.10.0",
-    "request": ">=2.27.0"
-  }
+    "request": ">=2.27.0",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
